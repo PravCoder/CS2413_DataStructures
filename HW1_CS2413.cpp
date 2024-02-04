@@ -96,22 +96,23 @@ void Student::set_GPA(float y) {
 void Student::prt_GPA() {
     cout << GPA;
 }
-//
+// reset student-id and gpa attributes to negative one
 void Student::reset() {
     SID = -1;
     GPA = -1;
 }
-
+// return the gpa attribute of student-obj
 float Student::get_GPA() {
     return GPA;
 }
-
+// Student-class constructor, same as reset()-method
 Student::Student() {
     SID = -1;
     GPA = -1;
 }
 
 // University class member function implementations
+// given an array of student-objs assigns each element to sooner-attribute-arr
 void University::set_Stu(Student x[]) {
     for (int i = 0; i < 5; i++) {
         Sooner[i] = x[i];
@@ -119,20 +120,21 @@ void University::set_Stu(Student x[]) {
 }
 
 float University::GPA_Mean() {
-    float total_sum = 0.0;
-    for (int i = 0; i < 5; i++) {
-        total_sum += Sooner[i].get_GPA();
+    float total_sum = 0.0;  // stores total sum
+    for (int i = 0; i < 5; i++) {      // iterate through number of students
+        float cur_gpa = Sooner[i].get_GPA(); // get teh gpa of current-student-obj in sonner-array
+        total_sum += cur_gpa;  // add gpa to total sum
     }
-    total_sum /= 5;
+    total_sum /= 5;  // compute average with nummber of students
     cout << total_sum;
     return total_sum;
 }
 
 float University::GPA_Max() {
-    float largest = -1;
-    for (int i = 0; i < 5; i++) {
-        float cur_gpa = Sooner[i].get_GPA();
-        if (cur_gpa > largest) {
+    float largest = -1;  // initialze largest gpa to -1 
+    for (int i = 0; i < 5; i++) {       // iterate number of students
+        float cur_gpa = Sooner[i].get_GPA();    // get the gpa of current-student-obj in sonner-array
+        if (cur_gpa > largest) {  // if gpa of cur-student-obj is greater than cur-largest gpa, replace it
             largest = cur_gpa;
         }
     }
@@ -141,10 +143,10 @@ float University::GPA_Max() {
 }
 
 float University::GPA_Min() {
-    float smallest = 100;
-    for (int i = 0; i < 5; i++) {
-        float cur_gpa = Sooner[i].get_GPA();
-        if (cur_gpa < smallest) {
+    float smallest = 100; // initialze smallest gpa to to a large number
+    for (int i = 0; i < 5; i++) {       // iterate number of students
+        float cur_gpa = Sooner[i].get_GPA();  // get the gpa of current-student-obj in sonner-array
+        if (cur_gpa < smallest) {   // if gpa of cur-student-obj is less than than cur-largest gpa, replace it
             smallest = cur_gpa;
         }
     }
