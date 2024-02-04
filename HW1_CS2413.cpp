@@ -154,9 +154,9 @@ float University::GPA_Min() {
     return smallest;
 }
 
-University::University() {
-    for (int i = 0; i < 5; i++) {
-        Sooner[i].reset();
+University::University() {   // constructor for University class    
+    for (int i = 0; i < 5; i++) {  // iterate number of students
+        Sooner[i].reset();  // get cur-student-obj from sooner-arr and call reset on it
     }
 }
 
