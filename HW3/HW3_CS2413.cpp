@@ -115,7 +115,8 @@ int MyVector::at(int idx) {
 }
 
 void MyVector::resize(int n) {
-	int* newP = new int[n];
+	int* newP = new int[n];  // create new pointer with size of new-resize
+	// if size of original arr is less than new-size
 	if (size < n) {
 		for (int i=0; i<size; i++) {
 			newP[i] = p[i];
@@ -124,6 +125,8 @@ void MyVector::resize(int n) {
 			newP[j] = 0;
 		}
 	} 
+
+	// if size of orignal is greater than n
 	if (size > n) {
 		for (int i=0; i<n; i++) {
 			newP[i] = p[i];
@@ -135,6 +138,70 @@ void MyVector::resize(int n) {
 	p = newP;  // update pointer-field of vector-obj with new-array-pointer
 }
 
+void MyVector::push_back(int x) {
+	int* newP = new int[size+1];   // create new pointer for new array, with size 1 more
+	for (int i=0; i<size; i++) {	// iterate from start to end of size of old-array
+		newP[i] = p[i];				// set new pointer-cur-indx-element equals old-pointer-indx-elemebt
+	}
+	
+	newP[size] = x;	// add new-element end of new-arrm the old-size is equal to the index of last element in new-arr
+	size += 1;		// increment size of cur-arr because we added element
+
+	delete[] p;  // delete old pointer to prevent memory leak
+	p = newP;  // update pointer-field of vector-obj with new-array-pointer
+}
+
+void MyVector::pop_back() {
+	if (size > 0) {  // if array is not empty
+		int* newP = new int[size-1];	// create new pointer for new-arr with size 1 less than original
+		for (int i=0; i<size-1; i++) {  // iterate from 0 to 1 less than original array, to leave out the last-element (deleting it)
+			newP[i] = p[i];				// set new-pointer-indx = old-pointer-indx-element
+		}
+
+		size -= 1;
+		delete[] p;  // delete old pointer to prevent memory leak
+		p = newP;  // update pointer-field of vector-obj with new-array-pointer
+	}
+}
+
+void MyVector::insert(int idx, int x) {
+	if (idx >= 0 && idx < size) {
+		int* newP = new int[size+1];  // create new-pointer-arr of 1 more size because we are adding element
+
+		for (int i=0; i<size; i++) {  // copy all of the elements in old-arr to new-arr-pointer
+			newP[i] = p[i];
+		}
+
+		newP[idx] = x;  // insert element into new-pointer-idx
+
+		for (int j=idx; j<size; j++) {
+			newP[j+1] = p[j];
+		}
+
+		size += 1;
+		delete[] p;  // delete old pointer to prevent memory leak
+		p = newP;  // update pointer-field of vector-obj with new-array-pointer
+	}
+}
+void MyVector::erase(int idx) {
+	// if the indx is valid
+	if (idx >= 0 && idx < size && size > 0) {
+		int* newP = new int[size-1];  // create new-pointer to new-array
+
+		for (int i=0; i<idx; i++) {
+			newP[i] = p[i];
+		}
+		for (int j=idx+1; j<size; j++) {
+			newP[j-1] = p[j];
+		}
+
+		size--;
+		delete[] p;
+		p = newP;
+	} 
+
+	
+}
 
 
 // The main function has been completed for you. 
