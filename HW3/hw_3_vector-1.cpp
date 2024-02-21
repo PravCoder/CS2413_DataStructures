@@ -89,6 +89,11 @@ private:
 };
 
 // MY CODE
+MyVector::MyVector() {	// constructor
+	p = NULL;
+	size = 0;
+}
+
 int MyVector::vsize() {  // return the number of elements in vector. 
     return size; 
 }
@@ -101,6 +106,34 @@ int MyVector::empty() {  // return 1-true if vector is empty, 0-false if it is n
 	}
 }
 
+int MyVector::at(int idx) {
+	if (idx < 0 || idx >= size) {
+		return -1;
+	} else {
+		return p[idx];
+	}
+}
+
+void MyVector::resize(int n) {
+	int* newP = new int[n];
+	if (size < n) {
+		for (int i=0; i<size; i++) {
+			newP[i] = p[i];
+		}
+		for (int j=size; j<n; j++) {
+			newP[j] = 0;
+		}
+	} 
+	if (size > n) {
+		for (int i=0; i<n; i++) {
+			newP[i] = p[i];
+		}
+	}
+
+	size = n;   // update new size of array
+	delete[] p;  // delete old pointer to prevent memory leak
+	p = newP;  // update pointer-field of vector-obj with new-array-pointer
+}
 
 
 
