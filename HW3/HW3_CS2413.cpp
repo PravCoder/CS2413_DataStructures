@@ -134,7 +134,7 @@ void MyVector::resize(int n) {
 	}
 
 	size = n;   // update new size of array
-	delete[] p;  // delete old pointer to prevent memory leak
+	delete[] p;  // delete old pointer to prevent memory leak, array-pointer
 	p = newP;  // update pointer-field of vector-obj with new-array-pointer
 }
 
@@ -188,6 +188,7 @@ void MyVector::erase(int idx) {
 	if (idx >= 0 && idx < size && size > 0) {
 		int* newP = new int[size-1];  // create new-pointer to new-array
 
+		// iterate from start to 
 		for (int i=0; i<idx; i++) {
 			newP[i] = p[i];
 		}
