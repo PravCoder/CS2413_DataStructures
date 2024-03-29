@@ -24,10 +24,12 @@ int main() {
             BinaryTree<int> tree;
             myStack<int> path;
 
-            tree.readLISP(tree.root, infile);
+            // Use public member functions to operate on the binary tree
+            binTreeNode<int>* root = nullptr;  // Declare a pointer to store the root
+            tree.readLISP(root, infile);  // Read LISP expression into the tree
             cout << "Path in tree ";
 
-            if (tree.evaluate(tree.root, 0, targetSum, path)) {
+            if (tree.evaluate(root, 0, targetSum, path)) {  // Evaluate the tree
                 cout << "exists" << endl;
                 cout << path.top();
                 path.pop();
@@ -40,7 +42,7 @@ int main() {
                 cout << "does not exist" << endl;
             }
 
-            tree.destroyTree(tree.root);
+            tree.destroyTree(root);  // Destroy the tree
         }
 
         infile.close();
