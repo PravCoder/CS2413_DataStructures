@@ -22,13 +22,12 @@ public:
     void destroyTree(binTreeNode<Type> *r);
 
 private:
-    binTreeNode<Type> *root; // Declare root member variable
     void destroyHelper(binTreeNode<Type> *r);
 };
 
 template <class Type>
 BinaryTree<Type>::BinaryTree() {
-    root = nullptr; // Initialize root to nullptr in constructor
+    root = nullptr;
 }
 
 template <class Type>

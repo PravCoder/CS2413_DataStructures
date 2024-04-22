@@ -1,0 +1,4 @@
+1. The runtime of my algorithm would be O(n + m +k), because n is the reading teh names file and storing the names in a vector, m is reading the assingment file and updating the count of the unordered_map. Iterating through unordered_map to print the output values is k. 
+2. The runtime would be O (nlogn + mlogm + k), because storing the list of student names would need O(nlogn) time, where storing the list of assignmetns would also require O(mlogm). 
+3. With a unsorted list of anmes and assignemtns the runtime complexity would also be O(n + m +k), because in my algorithm I do not sort names alpahbetically.
+

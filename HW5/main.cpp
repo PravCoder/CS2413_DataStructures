@@ -1,53 +1,191 @@
 #include <iostream>
 #include <fstream>
-#include "binaryTree.h"
+// #include "myStack.h"
+// #include "binaryTree.h"
 
 using namespace std;
 
-int main() {
-    ifstream infile;
-    string filename;
+#include <iostream>
+#include <fstream>
+#include <stack>
+using namespace std;
 
-    // Prompt user for input file until a valid one is provided
-    while (true) {
-        cout << "Enter LISP file (All those parenthesis...): ";
-        cin >> filename;
-        infile.open(filename);
+struct binTreeNode {
+    int data;
+    binTreeNode* left;
+    binTreeNode* right;
+}; 
 
-        if (!infile) {
-            cerr << "Unable to open file. Please try again." << endl;
-            continue;
-        }
+// STACK CLASS
+class myStack {
+    public:
+        myStack(); 
+        ~myStack();
+        void push(int);
+        void pop();
+        int top() const;
+        bool isEmpty() const;
+    private:
+        struct Node {
+            int data;
+            Node* next;
+        };
+        Node* topPtr;
+};
 
-        int targetSum;
-        while (infile >> targetSum) {
-            BinaryTree<int> tree;
-            myStack<int> path;
+myStack::myStack() :  topPtr(nullptr) {}
 
-            // Use public member functions to operate on the binary tree
-            binTreeNode<int>* root = nullptr;  // Declare a pointer to store the root
-            tree.readLISP(root, infile);  // Read LISP expression into the tree
-            cout << "Path in tree ";
-
-            if (tree.evaluate(root, 0, targetSum, path)) {  // Evaluate the tree
-                cout << "exists" << endl;
-                cout << path.top();
-                path.pop();
-                while (!path.isEmpty()) {
-                    cout << " + " << path.top();
-                    path.pop();
-                }
-                cout << " = " << targetSum << endl;
-            } else {
-                cout << "does not exist" << endl;
-            }
-
-            tree.destroyTree(root);  // Destroy the tree
-        }
-
-        infile.close();
-        break; // Exit loop after processing the input file
+myStack::~myStack() {
+    while (!isEmpty()) {
+        pop();
     }
+}
+
+void myStack::push(int value) {
+    Node* newNode = new Node;
+    newNode->data = value;
+    newNode->next = topPtr;
+    topPtr = newNode;
+}
+
+void myStack::pop() {
+    if (!isEmpty()) {
+        Node* temp = topPtr;
+        topPtr = topPtr->next;
+        delete temp;
+    }
+}
+
+int myStack::top() const {
+    if (!isEmpty()) {
+        return topPtr->data;
+    } else {
+        return 0;
+    }
+}
+
+bool myStack::isEmpty() const {
+    return topPtr == nullptr;
+}
+
+bool evaluate(binTreeNode* root, int runningSum, int targetSum, myStack& path) {
+    if (root == nullptr) {
+        return false;
+    }
+
+    runningSum += root->data;
+    path.push(root->data);
+
+    if (root->left == nullptr && root->right == nullptr) {
+        if (runningSum == targetSum) {
+            return true;
+        }
+    }
+
+    if (evaluate(root->left, runningSum, targetSum, path) ||
+        evaluate(root->right, runningSum, targetSum, path)) {
+        return true;
+    }
+
+    path.pop();
+    return false;
+}
+
+
+// BINARY TREE CLASS
+class BinaryTree {
+    public:
+        BinaryTree();
+        ~BinaryTree();
+        void readLISP(ifstream& infile);
+        void destroyTree();
+        bool evaluate(int targetSum, myStack& path);
+    private:
+        binTreeNode* root;
+        void readLISPHelper(binTreeNode*& node, ifstream& infile);
+        void destroyTreeHelper(binTreeNode* node);
+};
+
+BinaryTree::BinaryTree() : root(nullptr) {}
+
+BinaryTree::~BinaryTree() {
+    destroyTree();
+}
+
+void BinaryTree::readLISP(ifstream& infile) {
+    readLISPHelper(root, infile);
+}
+
+void BinaryTree::readLISPHelper(binTreeNode*& node, ifstream& infile) {
+    char ch;
+    infile >> ch;
+
+    if (ch == '(') {
+        node = new binTreeNode;
+        infile >> node->data;
+        readLISPHelper(node->left, infile);
+        readLISPHelper(node->right, infile);
+        infile >> ch; // Read closing parenthesis
+    } else if (ch == ')') {
+        node = nullptr;
+    }
+}
+
+void BinaryTree::destroyTree() {
+    destroyTreeHelper(root);
+    root = nullptr;
+}
+
+void BinaryTree::destroyTreeHelper(binTreeNode* node) {
+    if (node != nullptr) {
+        destroyTreeHelper(node->left);
+        destroyTreeHelper(node->right);
+        delete node;
+    }
+}
+
+bool BinaryTree::evaluate(binTreeNode* root, int runningSum, int targetSum, myStack& path) {
+    if (root == nullptr) {
+        return false;
+    }
+
+    runningSum += root->data;
+    path.push(root->data);
+
+    if (root->left == nullptr && root->right == nullptr) {
+        if (runningSum == targetSum) {
+            return true;
+        }
+    }
+
+    if (evaluate(root->left, runningSum, targetSum, path) ||
+        evaluate(root->right, runningSum, targetSum, path)) {
+        return true;
+    }
+
+    path.pop();
+    return false;
+}
+
+
+int main() {
+    myStack stack;
+    stack.push(5);
+    stack.push(10);
+    cout << "Top of the stack: " << stack.top() << endl;
+    stack.pop();
+    cout << "Top of the stack after pop: " << stack.top() << endl;
+
+    binTreeNode* root = new binTreeNode;
+    root->data = 5;
+    root->left = new binTreeNode;
+    root->left->data = 3;
+    root->left->left = root->left->right = nullptr;
+    root->right = new binTreeNode;
+    root->right->data = 7;
+    root->right->left = root->right->right = nullptr;
+
+    cout << "Binary Tree evaluation result: " << evaluate(root, 0, 10, stack) << endl;
 
     return 0;
 }
